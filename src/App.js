@@ -1,24 +1,37 @@
-import logo from './logo.svg';
+import { useEffect, useState} from 'react';
 import './App.css';
+import GridCharacters from './components/characters/GridCharacters';
+import FilterData from './components/ul/FilterCharacter';
+import Header from './components/ul/Header';
+
+const urlAPI = "https://breakingbadapi.com/api/characters?name="
 
 function App() {
+
+  const [characters, setCharacters] =useState([])
+  const [search, setSearch] = useState("")
+ 
+   useEffect(()=>{
+    fechingTheAPI()
+  },[search]) 
+
+
+  const fechingTheAPI = async()=>{
+      try{
+    const request = await fetch(urlAPI+search)
+    const data = await request.json()
+    setCharacters(data)
+      }catch(err){
+        console.log(err)
+      }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div className='container'>
+      <Header />
+      <FilterData filtereddata ={(value)=> setSearch(value)} />
+      <GridCharacters characters={characters}/>
+   </div>
   );
 }
 
